@@ -1,0 +1,9 @@
+numpy
+pandas
+scikit-learn
+matplotlib
+librosa
+torch
+timm
+onnx
+onnxruntime

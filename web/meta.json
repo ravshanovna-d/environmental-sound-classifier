@@ -1,0 +1,183 @@
+{
+  "title": "Environmental Sound Classifier",
+  "subtitle": "Recognises 10 everyday sounds — dog bark, rain, crying baby, chainsaw and more — from a 5-second clip, entirely in your browser.",
+  "tags": [
+    "Audio",
+    "Log-mel spectrogram",
+    "ResNet18",
+    "Transfer learning",
+    "PyTorch",
+    "ONNX"
+  ],
+  "classes": [
+    "chainsaw",
+    "clock_tick",
+    "crackling_fire",
+    "crying_baby",
+    "dog",
+    "helicopter",
+    "rain",
+    "rooster",
+    "sea_waves",
+    "sneezing"
+  ],
+  "class_names": [
+    "Chainsaw",
+    "Clock tick",
+    "Crackling fire",
+    "Crying baby",
+    "Dog bark",
+    "Helicopter",
+    "Rain",
+    "Rooster",
+    "Sea waves",
+    "Sneezing"
+  ],
+  "model_name": "ResNet18 — full fine-tuning",
+  "best_strategy": "Full fine-tuning",
+  "comparison": [
+    {
+      "strategy": "From scratch",
+      "pretrained": false,
+      "frozen": false,
+      "lr": 0.001,
+      "epochs": 15,
+      "trainable_params": 11181642,
+      "best_val_acc": 0.862500011920929,
+      "test_acc": 0.7250000238418579,
+      "train_minutes": 2.6
+    },
+    {
+      "strategy": "Frozen features",
+      "pretrained": true,
+      "frozen": true,
+      "lr": 0.01,
+      "epochs": 15,
+      "trainable_params": 5130,
+      "best_val_acc": 0.7875000238418579,
+      "test_acc": 0.75,
+      "train_minutes": 0.7
+    },
+    {
+      "strategy": "Full fine-tuning",
+      "pretrained": true,
+      "frozen": false,
+      "lr": 0.001,
+      "epochs": 15,
+      "trainable_params": 11181642,
+      "best_val_acc": 0.9750000238418579,
+      "test_acc": 0.9125000238418579,
+      "train_minutes": 2.5
+    }
+  ],
+  "test_metrics": {
+    "Accuracy": 0.9125,
+    "Macro F1": 0.9112605042016806,
+    "Top-3 accuracy": 0.975
+  },
+  "web_model": {
+    "format": "ONNX, int8 weights",
+    "size_mb": 11.2,
+    "test_acc": 0.9,
+    "agreement_with_pytorch": 0.9875
+  },
+  "parity": {
+    "max_abs_diff_normalised": 5.960464477539062e-07,
+    "max_abs_diff_db": 1.1920928955078125e-05,
+    "prediction_agreement": 1.0,
+    "clips": 80
+  },
+  "examples": [
+    {
+      "file": "examples/chainsaw.wav",
+      "label": "chainsaw",
+      "name": "Chainsaw",
+      "source": "https://freesound.org/s/170338/"
+    },
+    {
+      "file": "examples/clock_tick.wav",
+      "label": "clock_tick",
+      "name": "Clock tick",
+      "source": "https://freesound.org/s/201194/"
+    },
+    {
+      "file": "examples/crackling_fire.wav",
+      "label": "crackling_fire",
+      "name": "Crackling fire",
+      "source": "https://freesound.org/s/186924/"
+    },
+    {
+      "file": "examples/crying_baby.wav",
+      "label": "crying_baby",
+      "name": "Crying baby",
+      "source": "https://freesound.org/s/151085/"
+    },
+    {
+      "file": "examples/dog.wav",
+      "label": "dog",
+      "name": "Dog bark",
+      "source": "https://freesound.org/s/203128/"
+    },
+    {
+      "file": "examples/helicopter.wav",
+      "label": "helicopter",
+      "name": "Helicopter",
+      "source": "https://freesound.org/s/177957/"
+    },
+    {
+      "file": "examples/rain.wav",
+      "label": "rain",
+      "name": "Rain",
+      "source": "https://freesound.org/s/181766/"
+    },
+    {
+      "file": "examples/rooster.wav",
+      "label": "rooster",
+      "name": "Rooster",
+      "source": "https://freesound.org/s/194930/"
+    },
+    {
+      "file": "examples/sea_waves.wav",
+      "label": "sea_waves",
+      "name": "Sea waves",
+      "source": "https://freesound.org/s/200461/"
+    },
+    {
+      "file": "examples/sneezing.wav",
+      "label": "sneezing",
+      "name": "Sneezing",
+      "source": "https://freesound.org/s/187979/"
+    }
+  ],
+  "figures": [
+    {
+      "src": "assets/val_curves.png",
+      "caption": "Validation accuracy per epoch for the three strategies."
+    },
+    {
+      "src": "assets/confusion_matrix.png",
+      "caption": "Where the best model is right and wrong on the test fold."
+    },
+    {
+      "src": "assets/spectrograms.png",
+      "caption": "What the network actually sees: one log-mel spectrogram per class."
+    }
+  ],
+  "steps": [
+    "Took the ESC-10 subset of ESC-50: 400 five-second clips, 10 classes, using the official folds (1–3 train, 4 validation, 5 test).",
+    "Turned each clip into a 128×216 log-mel spectrogram with librosa (22050 Hz, n_fft 1024, hop 512).",
+    "Trained ResNet18 three ways with the same budget: from scratch, frozen ImageNet features, full fine-tuning.",
+    "Used light augmentation (time shift + SpecAugment masks) and picked the best epoch on the validation fold.",
+    "Chose full fine-tuning by validation accuracy and evaluated it once on the test fold.",
+    "Exported it to ONNX (int8 weights) and re-implemented the log-mel pipeline in JavaScript, verified against librosa."
+  ],
+  "dataset": {
+    "name": "ESC-50 (ESC-10 subset)",
+    "url": "https://github.com/karolpiczak/ESC-50",
+    "license": "CC BY-NC 3.0",
+    "clips": 400
+  },
+  "repo_url": "https://github.com/ravshanovna-d/environmental-sound-classifier",
+  "notebook_url": "https://github.com/ravshanovna-d/environmental-sound-classifier/blob/main/notebook.ipynb",
+  "footer": "Built by <a href=\"https://github.com/ravshanovna-d\">ravshanovna-d</a>"
+}
