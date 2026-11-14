@@ -2,7 +2,7 @@
 
 Recognises 10 everyday sounds (dog bark, rain, crying baby, chainsaw and others) from a 5-second audio clip, using a ResNet18 trained on log-mel spectrograms.
 
-**[Live demo →](LIVE_DEMO_URL)**: play one of the bundled clips, upload your own audio file or record 5 seconds from your microphone. Your browser computes the spectrogram and runs the model (ONNX Runtime Web), so no server is needed.
+**[Live demo →](https://ravshanovna-sound-classifier.vercel.app)**: play one of the bundled clips, upload your own audio file or record 5 seconds from your microphone. Your browser computes the spectrogram and runs the model (ONNX Runtime Web), so no server is needed.
 
 ![Log-mel spectrograms, one per class](web/assets/spectrograms.png)
 
